@@ -58,6 +58,19 @@ class UserController {
             return next(error);
         }
     }
+
+    static async userInfo(req, res, next) {
+        try {
+            const loggedUser = await User.findByPk(req.user.id, { attributes: ['id', 'name', 'email'] })
+            if (!loggedUser) {
+                return res.status(404).json({ message: `User not found` })
+            }
+
+            return res.status(200).json(loggedUser)
+        } catch (error) {
+            return next(error)
+        }
+    }
 }
 
 module.exports = UserController;

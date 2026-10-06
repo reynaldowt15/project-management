@@ -1,7 +1,8 @@
 require('dotenv').config()
 
 const express = require('express');
-const UserController = require('./controllers/UserController');
+const router = require('./routes/index')
+
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -12,8 +13,7 @@ app.get('/check-health', (req, res) => {
     res.send('Server running!')
 })
 
-app.post('/register', UserController.register)
-app.post('/login', UserController.login)
+app.use(`/`, router)
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
