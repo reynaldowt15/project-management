@@ -14,7 +14,7 @@ module.exports = {
         allowNull: false
       },
       description: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       },
       status: {
@@ -31,7 +31,7 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true
       },
-      WhatsappNotified: {
+      TelegramNotified: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false

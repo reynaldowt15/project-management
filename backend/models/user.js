@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     GoogleId: DataTypes.STRING,
-    WhatsappChatId: DataTypes.STRING
+    TelegramChatId: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'User',

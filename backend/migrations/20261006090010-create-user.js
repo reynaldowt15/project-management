@@ -27,7 +27,7 @@ module.exports = {
         allowNull: true,
         unique: true
       },
-      WhatsappChatId: {
+      TelegramChatId: {
         type: Sequelize.STRING,
         allowNull: true
       },

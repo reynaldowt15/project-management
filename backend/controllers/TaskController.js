@@ -126,7 +126,7 @@ class TaskController {
 
             if (dueDate !== undefined) {
                 task.dueDate = dueDate
-                task.WhatsappNotified = false
+                task.TelegramNotified = false
             }
 
             await task.save()

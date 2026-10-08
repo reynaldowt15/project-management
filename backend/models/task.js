@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.STRING,
     priority: DataTypes.STRING,
     dueDate: DataTypes.DATE,
-    WhatsappNotified: DataTypes.BOOLEAN,
+    TelegramNotified: DataTypes.BOOLEAN,
     ProjectId: DataTypes.INTEGER
   }, {
     sequelize,
