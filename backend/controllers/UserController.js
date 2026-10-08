@@ -25,6 +25,8 @@ class UserController {
             const user = await User.create({ name, email: email, password: hashedPassword });
             const userData = user.get({ plain: true });
             delete userData.password;
+            delete userData.GoogleId;
+            delete userData.TelegramChatId;
 
             return res.status(201).json({ message: 'Registration successful.', user: userData });
         } catch (error) {
@@ -52,6 +54,8 @@ class UserController {
             const token = generateToken({ id: user.id, email: user.email });
             const userData = user.get({ plain: true });
             delete userData.password;
+            delete userData.GoogleId;
+            delete userData.TelegramChatId;
 
             return res.status(200).json({ message: 'Login successful.', token, user: userData });
         } catch (error) {
@@ -67,6 +71,37 @@ class UserController {
             }
 
             return res.status(200).json(loggedUser)
+        } catch (error) {
+            return next(error)
+        }
+    }
+
+    static async googleLogin(req, res, next) {
+        try {
+            const { OAuth2Client } = require('google-auth-library');
+            const client = new OAuth2Client();
+            const idToken = req.headers.token
+
+            const ticket = await client.verifyIdToken({
+                idToken: idToken,
+                audience: process.env.GOOGLE_CLIENT_ID
+            });
+            const gPayload = ticket.getPayload();
+            console.log(gPayload)
+
+            const [user, created] = await User.findOrCreate({
+                where: { email: gPayload.email },
+                defaults: { name: gPayload.name, email: gPayload.email, password: `google_password` }
+            })
+
+            const token = generateToken({ id: user.id, email: user.email });
+            const userData = user.get({ plain: true });
+            delete userData.password;
+            delete userData.GoogleId;
+            delete userData.TelegramChatId;
+
+            return res.status(200).json({ message: 'Login successful.', token, user: userData });
+
         } catch (error) {
             return next(error)
         }
