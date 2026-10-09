@@ -26,7 +26,6 @@ class UserController {
             const userData = user.get({ plain: true });
             delete userData.password;
             delete userData.GoogleId;
-            delete userData.TelegramChatId;
 
             return res.status(201).json({ message: 'Registration successful.', user: userData });
         } catch (error) {
@@ -55,7 +54,6 @@ class UserController {
             const userData = user.get({ plain: true });
             delete userData.password;
             delete userData.GoogleId;
-            delete userData.TelegramChatId;
 
             return res.status(200).json({ message: 'Login successful.', token, user: userData });
         } catch (error) {
@@ -65,7 +63,7 @@ class UserController {
 
     static async userInfo(req, res, next) {
         try {
-            const loggedUser = await User.findByPk(req.user.id, { attributes: ['id', 'name', 'email'] })
+            const loggedUser = await User.findByPk(req.user.id, { attributes: ['id', 'name', 'email', 'TelegramChatId'] })
             if (!loggedUser) {
                 return res.status(404).json({ message: `User not found.` })
             }
@@ -98,12 +96,41 @@ class UserController {
             const userData = user.get({ plain: true });
             delete userData.password;
             delete userData.GoogleId;
-            delete userData.TelegramChatId;
 
             return res.status(200).json({ message: 'Login successful.', token, user: userData });
 
         } catch (error) {
             return next(error)
+        }
+    }
+
+    static async updateTelegramChatId(req, res, next) {
+        try {
+            const { TelegramChatId } = req.body;
+
+            if (!TelegramChatId) {
+                return res.status(400).json({
+                    message: "Telegram Chat ID is required"
+                });
+            }
+
+            const user = await User.findByPk(req.user.id);
+
+            if (!user) {
+                return res.status(404).json({
+                    message: "User not found"
+                });
+            }
+
+            user.TelegramChatId = TelegramChatId;
+            await user.save();
+
+            return res.status(200).json({
+                message: "Telegram Chat ID updated successfully",
+                TelegramChatId: user.TelegramChatId
+            });
+        } catch (error) {
+            next(error);
         }
     }
 }
